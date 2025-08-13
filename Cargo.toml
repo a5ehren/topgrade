@@ -88,3 +88,7 @@ lto = true
 [features]
 default = []
 self-update = ["self_update_crate"]
+
+[dev-dependencies]
+assert_cmd = "~2.0"
+predicates = "~3.1"

@@ -105,6 +105,28 @@ Just fork the repository and start coding.
 
 See [CONTRIBUTING.md](https://github.com/topgrade-rs/topgrade/blob/master/CONTRIBUTING.md)
 
+### Development and Testing
+
+Build:
+
+```bash
+cargo build
+```
+
+Run in safe mode:
+
+```bash
+cargo run -- --dry-run --skip-notify --no-retry
+```
+
+Run tests:
+
+```bash
+cargo test
+```
+
+Integration tests isolate `HOME`/`XDG_CONFIG_HOME` and use `--dry-run`, so they do not modify the system.
+
 ## Roadmap
 
 - [ ] Add a proper testing framework to the code base.

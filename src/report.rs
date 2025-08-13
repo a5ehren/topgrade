@@ -43,3 +43,26 @@ impl<'a> Report<'a> {
         &self.data
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[cfg(debug_assertions)]
+    #[test]
+    #[should_panic(expected = "already reported")]
+    fn pushing_duplicate_key_panics_in_debug() {
+        let mut report: Report = Report::new();
+        report.push_result(Some(("k", StepResult::Success)));
+        report.push_result(Some(("k", StepResult::Failure)));
+    }
+
+    #[cfg(not(debug_assertions))]
+    #[test]
+    fn pushing_duplicate_key_allowed_in_release() {
+        let mut report: Report = Report::new();
+        report.push_result(Some(("k", StepResult::Success)));
+        report.push_result(Some(("k", StepResult::Failure)));
+        assert_eq!(report.data().len(), 2);
+    }
+}

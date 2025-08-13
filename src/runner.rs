@@ -94,3 +94,65 @@ impl<'a> Runner<'a> {
         &self.report
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::{CommandLineArgs, Config};
+    use crate::execution_context::{ExecutionContext, RunType};
+    use crate::sudo::Sudo;
+    use clap::Parser;
+
+    // Build a minimal context with dry-run to avoid side effects
+    fn make_ctx() -> ExecutionContext<'static> {
+        let tmp = tempfile::TempDir::new().expect("tmp");
+        let cfg_path = tmp.path().join("nonexistent.toml");
+        let opt = CommandLineArgs::parse_from([
+            "topgrade",
+            "--dry-run",
+            "--skip-notify",
+            "--no-retry",
+            "--config",
+            cfg_path.to_str().unwrap(),
+        ]);
+        let config = Config::load(opt).expect("config load");
+        let sudo = config.sudo_command().map_or_else(Sudo::detect, Sudo::new);
+        #[cfg(target_os = "linux")]
+        let distribution = Box::leak(Box::new(crate::steps::linux::Distribution::detect()));
+        ExecutionContext::new(
+            RunType::new(true),
+            sudo,
+            Box::leak(Box::new(config)),
+            #[cfg(target_os = "linux")]
+            distribution,
+        )
+    }
+
+    #[test]
+    fn runner_records_success_and_failure() {
+        let ctx = make_ctx();
+        let mut runner = Runner::new(&ctx);
+
+        runner
+            .execute(crate::step::Step::Bin, "ok", || Ok(()))
+            .expect("execute ok");
+        runner
+            .execute(crate::step::Step::Bin, "fail", || Err(color_eyre::eyre::eyre!("boom")))
+            .expect("execute fail handled");
+
+        let mut seen_ok = false;
+        let mut seen_fail = false;
+        for (k, v) in runner.report().data() {
+            if k == "ok" {
+                assert!(matches!(v, StepResult::Success));
+                seen_ok = true;
+            }
+            if k == "fail" {
+                assert!(matches!(v, StepResult::Failure | StepResult::Ignored));
+                seen_fail = true;
+            }
+        }
+        assert!(seen_ok);
+        assert!(seen_fail);
+    }
+}

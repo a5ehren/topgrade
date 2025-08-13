@@ -241,3 +241,38 @@ impl CommandExt for Executor {
         self.spawn()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::command::CommandExt as _;
+
+    #[test]
+    fn dry_executor_arg_collection_and_spawn_noop() {
+        let mut exec = Executor::Dry(DryCommand::new("echo"));
+        exec.arg("hello").args(["world", "!"]);
+        // spawn should not actually execute and should return Dry
+        let child = exec.spawn().expect("dry spawn should succeed");
+        match child {
+            ExecutorChild::Dry => {}
+            ExecutorChild::Wet(_) => panic!("expected dry child"),
+        }
+    }
+
+    #[test]
+    fn dry_executor_output_checked_reports_dry_run() {
+        let mut exec = Executor::Dry(DryCommand::new("true"));
+        let result = exec.output_checked_with(|_o| Ok(()));
+        assert!(result.is_err(), "dry output_checked_with should error with DryRun");
+        let err = result.unwrap_err();
+        assert!(err.downcast_ref::<crate::error::DryRun>().is_some());
+    }
+
+    #[test]
+    fn dry_executor_status_checked_with_codes_succeeds() {
+        let mut exec = Executor::Dry(DryCommand::new("false"));
+        // In dry mode, status_checked_with_codes should be treated as success
+        exec.status_checked_with_codes(&[1, 2, 3])
+            .expect("dry status should succeed");
+    }
+}
