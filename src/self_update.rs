@@ -4,7 +4,7 @@ use std::os::unix::process::CommandExt as _;
 use std::process::Command;
 
 use crate::step::Step;
-use color_eyre::eyre::{bail, Result};
+use color_eyre::eyre::{Result, bail};
 use rust_i18n::t;
 use self_update_crate::backends::github::Update;
 use self_update_crate::update::UpdateStatus;

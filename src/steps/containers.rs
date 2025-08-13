@@ -2,9 +2,9 @@ use std::fmt::{Display, Formatter};
 use std::path::Path;
 use std::process::Command;
 
-use color_eyre::eyre::eyre;
 use color_eyre::eyre::Context;
 use color_eyre::eyre::Result;
+use color_eyre::eyre::eyre;
 use tracing::{debug, error, warn};
 use wildmatch::WildMatch;
 
@@ -183,9 +183,5 @@ pub fn run_containers(ctx: &ExecutionContext) -> Result<()> {
         }
     }
 
-    if success {
-        Ok(())
-    } else {
-        Err(eyre!(error::StepFailed))
-    }
+    if success { Ok(()) } else { Err(eyre!(error::StepFailed)) }
 }

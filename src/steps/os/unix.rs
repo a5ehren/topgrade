@@ -1,6 +1,6 @@
-use color_eyre::eyre::eyre;
 use color_eyre::eyre::Context;
 use color_eyre::eyre::Result;
+use color_eyre::eyre::eyre;
 use home;
 use ini::Ini;
 #[cfg(target_os = "linux")]
@@ -20,7 +20,7 @@ use tracing::{debug, warn};
 
 use crate::command::CommandExt;
 use crate::sudo::SudoExecuteOpts;
-use crate::{output_changed_message, HOME_DIR};
+use crate::{HOME_DIR, output_changed_message};
 
 #[cfg(target_os = "linux")]
 use super::linux::Distribution;
@@ -30,7 +30,7 @@ use crate::execution_context::ExecutionContext;
 use crate::executor::Executor;
 use crate::step::Step;
 use crate::terminal::print_separator;
-use crate::utils::{require, PathExt};
+use crate::utils::{PathExt, require};
 
 #[cfg(any(target_os = "linux", target_os = "macos"))]
 const INTEL_BREW: &str = "/usr/local/bin/brew";

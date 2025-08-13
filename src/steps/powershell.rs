@@ -1,9 +1,9 @@
 use std::path::PathBuf;
 use std::process::Command;
 
+use color_eyre::eyre::Result;
 #[cfg(windows)]
 use color_eyre::eyre::eyre;
-use color_eyre::eyre::Result;
 use rust_i18n::t;
 use tracing::debug;
 
@@ -11,7 +11,7 @@ use crate::command::CommandExt;
 use crate::execution_context::ExecutionContext;
 use crate::step::Step;
 use crate::terminal;
-use crate::utils::{which, PathExt};
+use crate::utils::{PathExt, which};
 
 pub struct Powershell {
     path: PathBuf,
@@ -213,11 +213,7 @@ impl Powershell {
             }
             let ret_val = output.stdout.trim();
             debug!("Command return value: {}", ret_val);
-            if ret_val == "0" {
-                Ok(())
-            } else {
-                Err(())
-            }
+            if ret_val == "0" { Ok(()) } else { Err(()) }
         })?;
         println!(
             "{}",

@@ -8,7 +8,7 @@ use std::time::Duration;
 
 use crate::breaking_changes::{first_run_of_major_release, print_breaking_changes, should_skip, write_keep_file};
 use clap::CommandFactory;
-use clap::{crate_version, Parser};
+use clap::{Parser, crate_version};
 use color_eyre::eyre::Context;
 use color_eyre::eyre::Result;
 use console::Key;
@@ -257,11 +257,7 @@ fn run() -> Result<()> {
         );
     }
 
-    if failed {
-        Err(StepFailed.into())
-    } else {
-        Ok(())
-    }
+    if failed { Err(StepFailed.into()) } else { Ok(()) }
 }
 
 fn main() {

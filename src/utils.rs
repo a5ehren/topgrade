@@ -11,8 +11,8 @@ use tracing::{debug, error};
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::reload::{Handle, Layer};
 use tracing_subscriber::util::SubscriberInitExt;
-use tracing_subscriber::{fmt, Registry};
-use tracing_subscriber::{registry, EnvFilter};
+use tracing_subscriber::{EnvFilter, registry};
+use tracing_subscriber::{Registry, fmt};
 
 use crate::command::CommandExt;
 use crate::config::DEFAULT_LOG_LEVEL;

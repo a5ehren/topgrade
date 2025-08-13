@@ -6,13 +6,13 @@ use color_eyre::eyre::Result;
 use tracing::debug;
 use walkdir::WalkDir;
 
+use crate::HOME_DIR;
+use crate::XDG_DIRS;
 use crate::command::CommandExt;
 use crate::execution_context::ExecutionContext;
 use crate::git::RepoStep;
 use crate::terminal::print_separator;
-use crate::utils::{require, PathExt};
-use crate::HOME_DIR;
-use crate::XDG_DIRS;
+use crate::utils::{PathExt, require};
 use etcetera::base_strategy::BaseStrategy;
 
 pub fn run_zr(ctx: &ExecutionContext) -> Result<()> {
