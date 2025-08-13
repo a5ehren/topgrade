@@ -16,7 +16,7 @@ pub struct Runner<'a> {
 }
 
 impl<'a> Runner<'a> {
-    pub fn new(ctx: &'a ExecutionContext) -> Runner<'a> {
+    pub fn new(ctx: &'a ExecutionContext<'a>) -> Runner<'a> {
         Runner {
             ctx,
             report: Report::new(),
@@ -90,7 +90,7 @@ impl<'a> Runner<'a> {
         Ok(())
     }
 
-    pub fn report(&self) -> &Report {
+    pub fn report(&self) -> &Report<'_> {
         &self.report
     }
 }
