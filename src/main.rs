@@ -12,6 +12,7 @@ use clap::{Parser, crate_version};
 use color_eyre::eyre::Context;
 use color_eyre::eyre::Result;
 use console::Key;
+#[allow(unused_imports)]
 use etcetera::base_strategy::BaseStrategy;
 #[cfg(windows)]
 use etcetera::base_strategy::Windows;
@@ -190,11 +191,10 @@ fn run() -> Result<()> {
         }
     }
 
-    if config.pre_sudo() {
-        if let Some(sudo) = ctx.sudo() {
+    if config.pre_sudo()
+        && let Some(sudo) = ctx.sudo() {
             sudo.elevate(&ctx)?;
         }
-    }
 
     for step in step::default_steps() {
         step.run(&mut runner, &ctx)?

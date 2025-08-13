@@ -598,15 +598,14 @@ impl Step {
             }
             Uv => runner.execute(*self, "uv", || generic::run_uv(ctx))?,
             Vagrant => {
-                if ctx.config().should_run(Vagrant) {
-                    if let Ok(boxes) = vagrant::collect_boxes(ctx) {
+                if ctx.config().should_run(Vagrant)
+                    && let Ok(boxes) = vagrant::collect_boxes(ctx) {
                         for vagrant_box in boxes {
                             runner.execute(Vagrant, format!("Vagrant ({})", vagrant_box.smart_name()), || {
                                 vagrant::topgrade_vagrant_box(ctx, &vagrant_box)
                             })?;
                         }
                     }
-                }
                 runner.execute(Vagrant, "Vagrant boxes", || vagrant::upgrade_vagrant_boxes(ctx))?;
             }
             Vcpkg => runner.execute(*self, "vcpkg", || generic::run_vcpkg_update(ctx))?,

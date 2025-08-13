@@ -915,11 +915,10 @@ impl Config {
         let mut enabled_steps: Vec<Step> = Vec::new();
         enabled_steps.extend(&opt.only);
 
-        if let Some(misc) = config_file.misc.as_ref() {
-            if let Some(only) = misc.only.as_ref() {
+        if let Some(misc) = config_file.misc.as_ref()
+            && let Some(only) = misc.only.as_ref() {
                 enabled_steps.extend(only);
             }
-        }
 
         if enabled_steps.is_empty() {
             enabled_steps.extend(Step::iter());
@@ -927,11 +926,10 @@ impl Config {
 
         let mut disabled_steps: Vec<Step> = Vec::new();
         disabled_steps.extend(&opt.disable);
-        if let Some(misc) = config_file.misc.as_ref() {
-            if let Some(disabled) = misc.disable.as_ref() {
+        if let Some(misc) = config_file.misc.as_ref()
+            && let Some(disabled) = misc.disable.as_ref() {
                 disabled_steps.extend(disabled);
             }
-        }
 
         enabled_steps.retain(|e| !disabled_steps.contains(e) || opt.only.contains(e));
         enabled_steps
@@ -1567,11 +1565,10 @@ impl Config {
     pub fn should_execute_remote(&self, hostname: Result<String>, remote: &str) -> bool {
         let remote_host = remote.split_once('@').map_or(remote, |(_, host)| host);
 
-        if let Ok(hostname) = hostname {
-            if remote_host == hostname {
+        if let Ok(hostname) = hostname
+            && remote_host == hostname {
                 return false;
             }
-        }
 
         if let Some(limit) = &self.opt.remote_host_limit.as_ref() {
             return limit.is_match(remote_host);
