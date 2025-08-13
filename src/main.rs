@@ -100,7 +100,7 @@ fn run() -> Result<()> {
         let mut splitted = env.split('=');
         let var = splitted.next().unwrap();
         let value = splitted.next().unwrap();
-        env::set_var(var, value);
+        unsafe { env::set_var(var, value) };
     }
 
     if opt.edit_config() {
