@@ -39,9 +39,10 @@ pub fn run_git_pull(ctx: &ExecutionContext) -> Result<()> {
             if config.should_run(Step::Emacs) {
                 let emacs = Emacs::new();
                 if !emacs.is_doom()
-                    && let Some(directory) = emacs.directory() {
-                        repos.insert_if_repo(directory);
-                    }
+                    && let Some(directory) = emacs.directory()
+                {
+                    repos.insert_if_repo(directory);
+                }
                 repos.insert_if_repo(HOME_DIR.join(".doom.d"));
             }
 
@@ -58,9 +59,10 @@ pub fn run_git_pull(ctx: &ExecutionContext) -> Result<()> {
             }
 
             if let Some(powershell) = ctx.powershell()
-                && let Some(profile) = powershell.profile() {
-                    repos.insert_if_repo(profile);
-                }
+                && let Some(profile) = powershell.profile()
+            {
+                repos.insert_if_repo(profile);
+            }
         }
 
         #[cfg(unix)]
@@ -255,14 +257,15 @@ impl RepoStep {
                 match entry {
                     Ok(path) => {
                         if let Some(last_git_repo) = &last_git_repo
-                            && path.is_descendant_of(last_git_repo) {
-                                debug!(
-                                    "Skipping {} because it's a descendant of last known repo {}",
-                                    path.display(),
-                                    last_git_repo.display()
-                                );
-                                continue;
-                            }
+                            && path.is_descendant_of(last_git_repo)
+                        {
+                            debug!(
+                                "Skipping {} because it's a descendant of last known repo {}",
+                                path.display(),
+                                last_git_repo.display()
+                            );
+                            continue;
+                        }
                         if self.insert_if_repo(&path) {
                             last_git_repo = Some(path);
                         }

@@ -943,9 +943,10 @@ pub fn run_composer_update(ctx: &ExecutionContext) -> Result<()> {
         let output: Utf8Output = output.try_into()?;
         print!("{}\n{}", output.stdout, output.stderr);
         if (output.stdout.contains("valet") || output.stderr.contains("valet"))
-            && let Some(valet) = which("valet") {
-                ctx.execute(valet).arg("install").status_checked()?;
-            }
+            && let Some(valet) = which("valet")
+        {
+            ctx.execute(valet).arg("install").status_checked()?;
+        }
     }
 
     Ok(())

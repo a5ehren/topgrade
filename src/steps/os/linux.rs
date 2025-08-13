@@ -78,9 +78,10 @@ impl Distribution {
             Some("pclinuxos") => Distribution::PCLinuxOS,
             _ => {
                 if let Some(name) = name
-                    && name.contains("Vanilla") {
-                        return Ok(Distribution::Vanilla);
-                    }
+                    && name.contains("Vanilla")
+                {
+                    return Ok(Distribution::Vanilla);
+                }
                 if let Some(id_like) = id_like {
                     if id_like.contains(&"debian") || id_like.contains(&"ubuntu") {
                         return Ok(Distribution::Debian);
@@ -222,17 +223,19 @@ fn upgrade_wolfi_linux(ctx: &ExecutionContext) -> Result<()> {
 
 fn upgrade_redhat(ctx: &ExecutionContext) -> Result<()> {
     if let Some(bootc) = which("bootc")
-        && ctx.config().bootc() {
-            let sudo = ctx.require_sudo()?;
-            return sudo.execute(ctx, &bootc)?.arg("upgrade").status_checked();
-        }
+        && ctx.config().bootc()
+    {
+        let sudo = ctx.require_sudo()?;
+        return sudo.execute(ctx, &bootc)?.arg("upgrade").status_checked();
+    }
 
     if let Some(ostree) = which("rpm-ostree")
-        && ctx.config().rpm_ostree() {
-            let mut command = ctx.execute(ostree);
-            command.arg("upgrade");
-            return command.status_checked();
-        };
+        && ctx.config().rpm_ostree()
+    {
+        let mut command = ctx.execute(ostree);
+        command.arg("upgrade");
+        return command.status_checked();
+    };
 
     let sudo = ctx.require_sudo()?;
     let dnf = require_one(["dnf", "yum"])?;
@@ -298,10 +301,11 @@ fn upgrade_nilrt(ctx: &ExecutionContext) -> Result<()> {
 
 fn upgrade_fedora_immutable(ctx: &ExecutionContext) -> Result<()> {
     if let Some(bootc) = which("bootc")
-        && ctx.config().bootc() {
-            let sudo = ctx.require_sudo()?;
-            return sudo.execute(ctx, &bootc)?.arg("upgrade").status_checked();
-        }
+        && ctx.config().bootc()
+    {
+        let sudo = ctx.require_sudo()?;
+        return sudo.execute(ctx, &bootc)?.arg("upgrade").status_checked();
+    }
 
     let ostree = require("rpm-ostree")?;
     let mut command = ctx.execute(ostree);

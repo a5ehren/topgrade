@@ -192,9 +192,10 @@ fn run() -> Result<()> {
     }
 
     if config.pre_sudo()
-        && let Some(sudo) = ctx.sudo() {
-            sudo.elevate(&ctx)?;
-        }
+        && let Some(sudo) = ctx.sudo()
+    {
+        sudo.elevate(&ctx)?;
+    }
 
     for step in step::default_steps() {
         step.run(&mut runner, &ctx)?

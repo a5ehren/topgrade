@@ -103,10 +103,11 @@ fn list_containers(crt: &Path, ignored_containers: Option<&Vec<String>>) -> Resu
         let (repo_tag, image_id) = (split_res[0], split_res[1]);
 
         if let Some(ref ignored_containers) = ignored_containers
-            && ignored_containers.iter().any(|pattern| pattern.matches(repo_tag)) {
-                debug!("Skipping ignored container '{}'", line);
-                continue;
-            }
+            && ignored_containers.iter().any(|pattern| pattern.matches(repo_tag))
+        {
+            debug!("Skipping ignored container '{}'", line);
+            continue;
+        }
 
         debug!(
             "Querying '{} image inspect --format \"{{{{.Os}}}}/{{{{.Architecture}}}}\"' for container {}",
